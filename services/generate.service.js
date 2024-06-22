@@ -28,24 +28,46 @@ const generatePrompt = async (prompt, bearerToken) => {
     });
 
     response = chatCompletion.choices[0].message.content;
+    
+    // Prase endpoint
     var endpointRequired = ""
+    
     endpoints.apiConfig.map((apiEnd) => {
         if(response.includes(apiEnd.endpoints)) {
             endpointRequired = apiEnd.endpoints;
         }
     })
-    console.log(endpointRequired)
 
-    const config = {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      };
+    // if no api recieved
     if(endpointRequired == ""){
-        return  {}
+        return {topic: "No Related Data found", data: []}
     }
     
+    //Get API Response
+    
+    const config = {
+        headers: {
+            Authorization: `Bearer ${bearerToken}`,
+        },
+    };
+
     const res =  await axios.get(process.env.SERVER_ENDPOINT + endpointRequired, config);
+    
+    //Save History
+    await axios.get(process.env.SERVER_ENDPOINT + endpointRequired, config);
+    
+    const data = {
+        prompt: prompt,
+        title: topicCompletion.choices[0].message.content,
+        content: endpointRequired
+    };
+      
+    const headers = {
+        Authorization: `Bearer ${bearerToken}`,
+        'Content-Type': 'application/json'
+    };
+    
+    await axios.put(process.env.SERVER_ENDPOINT + "/fin-manager/search-history", data, { headers })
     return {topic: topicCompletion.choices[0].message.content, data: res.data}
 }
 
