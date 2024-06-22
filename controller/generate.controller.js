@@ -1,7 +1,7 @@
 const generateService = require("../services/generate.service");
 
 const generatePromptResponse = async (req, res) => {
-    var response = await generateService.generatePrompt(req.body.prompt)
+    var response = await generateService.generatePrompt(req.body.prompt, req.body.bearer)
     res.status(200).json({
         message: response,
     });

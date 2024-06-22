@@ -1,28 +1,45 @@
 const endpoints = require("../endpoints/endpoints")
 const OpenAI = require('openai');
+const axios = require('axios')
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
 
-inputPrompt = "If the user want the balance data use the following endpoint : '/fin-manager/balance-mode' and it is GET api."
-inputPrompt += "If the user want the goal set by user use the following endpoint : 'fin-manager/goal' and it is GET api."
+inputPrompt = ""
+
+endpoints.apiConfig.map((api) => {
+    inputPrompt += `If the user wants his ${api.name} (${api.desc}) use the following endpoint : '${api.endpoints}'. \n`
+})
+
 
 inputDesc = "Provide the endpoint and api type which I can use for :" 
-const generatePrompt = async (prompt) => {
+
+const generatePrompt = async (prompt, bearerToken) => {
     const chatCompletion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: inputPrompt }, { role: 'user', content: inputDesc + prompt }],
         model: 'gpt-3.5-turbo',
     });
     response = chatCompletion.choices[0].message.content;
     var endpointRequired = ""
-    endpoints.endpoints.map((apiEnd) => {
-        if(response.includes(apiEnd)) {
-            endpointRequired = apiEnd;
+    endpoints.apiConfig.map((apiEnd) => {
+        if(response.includes(apiEnd.endpoints)) {
+            endpointRequired = apiEnd.endpoints;
         }
     })
     console.log(endpointRequired)
-    return endpointRequired
+
+    const config = {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      };
+    if(endpointRequired == ""){
+        return  {}
+    }
+    
+    const res =  await axios.get(process.env.SERVER_ENDPOINT + endpointRequired, config);
+    return res.data
 }
 
 module.exports = {
