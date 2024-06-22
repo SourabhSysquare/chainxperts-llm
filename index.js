@@ -5,9 +5,7 @@ require('dotenv').config()
 const cors = require("cors");
 
 const generate = require("./routes/generate.route");
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use("/chainxprests-llm/generate", generate);
+
 
 app.use(
   cors({
@@ -17,6 +15,12 @@ app.use(
   })
 );
 app.options("*", cors());
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use("/chainxprests-llm/generate", generate);
+
+
 
 const PORT = process.env.PORT || 5000;
 
