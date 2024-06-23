@@ -78,7 +78,7 @@ const promptHistory = async (bearerToken) => {
     };
     const res = await axios.get(process.env.SERVER_ENDPOINT + "/fin-manager/search-history", config);
 
-    return { topic: topicCompletion.choices[0].message.content, data: res.data }
+    return { data: res.data }
 }
 
 module.exports = {
