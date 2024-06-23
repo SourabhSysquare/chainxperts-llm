@@ -14,7 +14,7 @@ endpoints.apiConfig.map((api) => {
 
 inputDesc = "Provide the endpoint and api type which I can use for :"
 
-inputTopic = "Provide a suitable brief 2 words for: "
+inputTopic = "Provide a suitable brief in max 2 words for:  '"
 
 const generatePrompt = async (prompt, bearerToken) => {
     const chatCompletion = await openai.chat.completions.create({
@@ -23,7 +23,7 @@ const generatePrompt = async (prompt, bearerToken) => {
     });
 
     const topicCompletion = await openai.chat.completions.create({
-        messages: [{ role: 'user', content: inputTopic + prompt }],
+        messages: [{ role: 'user', content: inputTopic + prompt + "'" }],
         model: 'gpt-3.5-turbo',
     });
 
