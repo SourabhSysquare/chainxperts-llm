@@ -70,6 +70,18 @@ const generatePrompt = async (prompt, bearerToken) => {
     return { topic: topicCompletion.choices[0].message.content, data: res.data }
 }
 
+const promptHistory = async (bearerToken) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${bearerToken}`,
+        },
+    };
+    const res = await axios.get(process.env.SERVER_ENDPOINT + "/fin-manager/search-history", config);
+
+    return { topic: topicCompletion.choices[0].message.content, data: res.data }
+}
+
 module.exports = {
-    generatePrompt
+    generatePrompt,
+    promptHistory
 }

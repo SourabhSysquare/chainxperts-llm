@@ -8,7 +8,16 @@ const generatePromptResponse = async (req, res) => {
     });
 };
 
+const promptHistory = async (req, res) => {
+    
+    var response = await generateService.promptHistory(req.body.token)
+    res.status(200).json({
+        data: response.data
+    });
+};
+
 module.exports = {
     generatePromptResponse,
+    promptHistory
 };
   
