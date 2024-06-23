@@ -14,7 +14,7 @@ endpoints.apiConfig.map((api) => {
 
 inputDesc = "Provide the endpoint and api type which I can use for :"
 
-inputTopic = "Provide a suitable title in max 2 words for for accounting server:  '"
+inputTopic = "Provide a suitable title in max 2 words for for accounting report:  '"
 
 const generatePrompt = async (prompt, bearerToken) => {
     const chatCompletion = await openai.chat.completions.create({
